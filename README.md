@@ -1,73 +1,66 @@
-# React + TypeScript + Vite
+# 🎤 KaraokeTube
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**KaraokeTube** è un'applicazione web moderna e reattiva progettata per portare l'esperienza del karaoke direttamente nel tuo browser. Sfruttando la potenza di YouTube e la sincronizzazione precisa dei testi tramite file `.lrc`, KaraokeTube trasforma qualsiasi video musicale in una sessione di karaoke professionale.
 
-Currently, two official plugins are available:
+---
+> [!NOTE]
+> **Made by Biagio** - Sviluppato con passione per tutti gli amanti della musica.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Caratteristiche Principali
 
-## React Compiler
+- 📺 **Integrazione YouTube**: Carica qualsiasi video musicale semplicemente inserendo l'URL o l'ID del video.
+- 🎶 **Sincronizzazione Testi**: Supporto per il formato `.lrc` per visualizzare i testi in tempo reale, perfettamente a tempo con la musica.
+- 📱 **Mobile Friendly**: Interfaccia ottimizzata per smartphone, tablet e desktop.
+- 🎨 **Interfaccia Moderna**: Design elegante con animazioni fluide grazie a Framer Motion e icone di Lucide-React.
+- ⚡ **Performance Elevate**: Costruito con React 19, TypeScript e Vite per una velocità fulminea.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Tecnologie Utilizzate
 
-## Expanding the ESLint configuration
+- **Core**: [React 19](https://react.dev/)
+- **Linguaggio**: [TypeScript](https://www.typescriptlang.org/)
+- **Bundler**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Animazioni**: [Framer Motion](https://www.framer.com/motion/)
+- **Icone**: [Lucide React](https://lucide.dev/)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Installazione e Sviluppo
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Se desideri eseguire il progetto localmente, segui questi passaggi:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. **Clona il repository**:
+   ```bash
+   git clone https://github.com/biagio-scaglia/KaraokeTube.git
+   cd KaraokeTube
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Installa le dipendenze**:
+   ```bash
+   npm install
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+3. **Avvia il server di sviluppo**:
+   ```bash
+   npm run dev
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+4. **Build per la produzione**:
+   ```bash
+   npm run build
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🌐 Deployment (Cloudflare Pages)
+
+Il progetto è pronto per essere distribuito su **Cloudflare Pages**. 
+
+### Configurazione su Cloudflare:
+- **Framework Preset**: Vite
+- **Build Command**: `npm run build`
+- **Build Output Directory**: `dist`
+- **Root Directory**: `/`
+
+Per gestire correttamente il routing lato client, è presente un file `_redirects` nella cartella `public`.
+
+---
+
+**KaraokeTube** - *Canta la tua passione.*
+
