@@ -1,18 +1,17 @@
 import { forwardRef } from 'react';
-import { motion } from 'framer-motion';
 
 export type LyricStatus = 'past' | 'active' | 'next' | 'future' | 'hidden';
 
 interface Props {
   text: string;
   status: LyricStatus;
-  fontScale?: number; 
+  fontScale?: number;
   onClick?: () => void;
 }
 
 const opacityMap: Record<LyricStatus, number> = {
   hidden: 0,
-  past: 0.2,
+  past: 0.22,
   active: 1,
   next: 0.55,
   future: 0.18,
@@ -26,42 +25,35 @@ const colorMap: Record<LyricStatus, string> = {
   future: 'var(--text-muted)',
 };
 
+const TRANSITION = 'opacity 0.32s ease, color 0.32s ease, font-size 0.32s ease, padding 0.32s ease';
+
 const LyricsLine = forwardRef<HTMLDivElement, Props>(
   ({ text, status, fontScale = 1, onClick }, ref) => {
     if (!text) return <div ref={ref} style={{ height: '0.5rem' }} aria-hidden="true" />;
 
     const isActive = status === 'active';
     const isHidden = status === 'hidden';
-
-    
-    const activeSizeRem = 2.0 * fontScale;
-    const normalSizeRem = 1.2 * fontScale;
+    const activeFontRem = Math.min(2.0 * fontScale, 2.8);
+    const normalFontRem = Math.min(1.2 * fontScale, 1.6);
 
     return (
-      <motion.div
+      <div
         ref={ref}
-        
-        initial={{ opacity: 0, y: 14 }}
-        animate={{
-          opacity: opacityMap[status],
-          color: colorMap[status],
-          y: 0,
-        }}
-        transition={{ duration: 0.38, ease: [0.4, 0, 0.2, 1] }}
         className="text-center select-none w-full"
         style={{
-          
-          fontSize: `${isActive ? activeSizeRem : normalSizeRem}rem`,
+          fontSize: `${isActive ? activeFontRem : normalFontRem}rem`,
           fontWeight: isActive ? 700 : status === 'next' ? 500 : 400,
-          lineHeight: isActive ? 1.25 : 1.5,
-          padding: isActive ? '0.55rem 1.5rem' : '0.3rem 1.5rem',
+          lineHeight: isActive ? 1.3 : 1.6,
+          padding: isActive ? '0.5rem 1.2rem' : '0.25rem 1.2rem',
           letterSpacing: isActive ? '-0.01em' : '0',
-          textShadow: isActive
-            ? '0 0 40px rgba(168,85,247,0.7), 0 0 80px rgba(168,85,247,0.3)'
-            : 'none',
-          transition: 'font-size 0.38s cubic-bezier(0.4,0,0.2,1), padding 0.38s cubic-bezier(0.4,0,0.2,1)',
+          opacity: opacityMap[status],
+          color: colorMap[status],
+          textShadow: isActive ? '0 0 28px rgba(168,85,247,0.45)' : 'none',
+          transition: TRANSITION,
+          willChange: 'opacity, color',
           cursor: onClick && !isHidden ? 'pointer' : 'default',
           pointerEvents: isHidden ? 'none' : 'auto',
+          WebkitTapHighlightColor: 'transparent',
         }}
         onClick={!isHidden ? onClick : undefined}
         role={onClick && !isHidden ? 'button' : undefined}
@@ -69,22 +61,25 @@ const LyricsLine = forwardRef<HTMLDivElement, Props>(
         aria-current={isActive ? 'true' : undefined}
         onKeyDown={onClick && !isHidden ? (e) => e.key === 'Enter' && onClick() : undefined}
       >
-        {isActive ? (
-          <span className="relative inline-block">
-            {text}
-            <motion.span
-              layoutId="active-underline"
-              className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 rounded-full"
-              style={{
-                background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-                width: '55%',
-              }}
-            />
-          </span>
-        ) : (
-          text
-        )}
-      </motion.div>
+        <span style={{ position: 'relative', display: 'inline-block' }}>
+          {text}
+          <span
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              bottom: '-3px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              height: '2px',
+              width: isActive ? '50%' : '0%',
+              borderRadius: '9999px',
+              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+              transition: 'width 0.32s ease',
+              display: 'block',
+            }}
+          />
+        </span>
+      </div>
     );
   }
 );

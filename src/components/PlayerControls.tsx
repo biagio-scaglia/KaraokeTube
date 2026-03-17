@@ -23,50 +23,35 @@ interface Props {
   onFullscreen: () => void;
 }
 
-const btn =
-  'flex items-center justify-center rounded-full transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500';
+const btn = 'flex items-center justify-center rounded-full transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 active:scale-90';
 
 export default function PlayerControls({
-  playerState,
-  currentTime,
-  duration,
-  volume,
-  muted,
-  isFullscreen,
-  onPlay,
-  onPause,
-  onSeek,
-  onVolumeChange,
-  onMute,
-  onUnmute,
-  onFullscreen,
+  playerState, currentTime, duration, volume, muted, isFullscreen,
+  onPlay, onPause, onSeek, onVolumeChange, onMute, onUnmute, onFullscreen,
 }: Props) {
   const [showVolume, setShowVolume] = useState(false);
   const isPlaying = playerState === 'playing';
   const isBuffering = playerState === 'buffering';
-
   const VolumeIcon = muted || volume === 0 ? VolumeX : volume < 50 ? Volume1 : Volume2;
 
   return (
-    <div className="w-full flex flex-col gap-3 px-2" role="toolbar" aria-label="Player controls">
+    <div className="w-full flex flex-col gap-2 px-1" role="toolbar" aria-label="Player controls">
       <ProgressBar currentTime={currentTime} duration={duration} onSeek={onSeek} />
 
-      {}
       <div className="grid items-center" style={{ gridTemplateColumns: '1fr auto 1fr' }}>
 
-        {}
-        <div className="flex justify-start items-center">
+        <div className="flex justify-start items-center gap-1">
           <div className="relative">
             <motion.button
               whileTap={{ scale: 0.88 }}
-              className={`${btn} w-9 h-9 text-white/60 hover:text-white`}
+              className={`${btn} w-11 h-11 sm:w-9 sm:h-9 text-white/60 active:text-white`}
               onClick={() => {
                 setShowVolume(v => !v);
                 (muted ? onUnmute : onMute)();
               }}
               aria-label={muted ? 'Unmute' : 'Mute'}
             >
-              <VolumeIcon size={18} />
+              <VolumeIcon size={20} />
             </motion.button>
 
             <AnimatePresence>
@@ -88,8 +73,8 @@ export default function PlayerControls({
                       if (v > 0 && muted) onUnmute();
                       if (v === 0) onMute();
                     }}
-                    className="w-24 accent-purple-500"
-                    style={{ writingMode: 'vertical-lr', direction: 'rtl', height: 80 }}
+                    className="accent-purple-500"
+                    style={{ writingMode: 'vertical-lr', direction: 'rtl', height: 80, width: 32 }}
                     aria-label="Volume"
                   />
                 </motion.div>
@@ -98,21 +83,19 @@ export default function PlayerControls({
           </div>
         </div>
 
-        {}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <motion.button
             whileTap={{ scale: 0.88 }}
-            className={`${btn} w-9 h-9 text-white/50 hover:text-white`}
+            className={`${btn} w-11 h-11 sm:w-9 sm:h-9 text-white/50 active:text-white`}
             onClick={() => onSeek(Math.max(currentTime - 10, 0))}
             aria-label="Rewind 10 seconds"
           >
-            <SkipBack size={18} />
+            <SkipBack size={20} />
           </motion.button>
 
           <motion.button
             whileTap={{ scale: 0.9 }}
-            whileHover={{ scale: 1.06 }}
-            className={`${btn} w-14 h-14 bg-white text-black hover:bg-purple-300`}
+            className={`${btn} w-16 h-16 sm:w-14 sm:h-14 bg-white text-black`}
             style={{ boxShadow: '0 0 24px rgba(168,85,247,0.5)' }}
             onClick={isPlaying ? onPause : onPlay}
             aria-label={isPlaying ? 'Pause' : 'Play'}
@@ -128,11 +111,11 @@ export default function PlayerControls({
                 />
               ) : isPlaying ? (
                 <motion.span key="pause" initial={{ scale: 0.7 }} animate={{ scale: 1 }}>
-                  <Pause size={22} fill="black" />
+                  <Pause size={24} fill="black" />
                 </motion.span>
               ) : (
                 <motion.span key="play" initial={{ scale: 0.7 }} animate={{ scale: 1 }}>
-                  <Play size={22} fill="black" className="ml-0.5" />
+                  <Play size={24} fill="black" className="ml-0.5" />
                 </motion.span>
               )}
             </AnimatePresence>
@@ -140,23 +123,22 @@ export default function PlayerControls({
 
           <motion.button
             whileTap={{ scale: 0.88 }}
-            className={`${btn} w-9 h-9 text-white/50 hover:text-white`}
+            className={`${btn} w-11 h-11 sm:w-9 sm:h-9 text-white/50 active:text-white`}
             onClick={() => onSeek(Math.min(currentTime + 10, duration))}
             aria-label="Skip 10 seconds"
           >
-            <SkipForward size={18} />
+            <SkipForward size={20} />
           </motion.button>
         </div>
 
-        {}
         <div className="flex justify-end items-center">
           <motion.button
             whileTap={{ scale: 0.88 }}
-            className={`${btn} w-9 h-9 text-white/60 hover:text-white`}
+            className={`${btn} w-11 h-11 sm:w-9 sm:h-9 text-white/60 active:text-white`}
             onClick={onFullscreen}
             aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
           >
-            {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+            {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
           </motion.button>
         </div>
       </div>

@@ -33,7 +33,7 @@ export default function Homepage({ onStart }: Props) {
       style={{ background: 'var(--bg-primary)' }}
     >
       {}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-16 pb-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-8 sm:pt-16 pb-8">
         {}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -83,10 +83,11 @@ export default function Homepage({ onStart }: Props) {
               <Music2 size={18} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
               <input
                 type="text"
+                inputMode="url"
                 value={url}
                 onChange={e => { setUrl(e.target.value); setError(''); }}
-                placeholder="Paste a YouTube URL… e.g. https://youtube.com/watch?v=…"
-                className="flex-1 bg-transparent text-sm sm:text-base outline-none placeholder:text-slate-600 text-white"
+                placeholder="Paste a YouTube URL…"
+                className="flex-1 bg-transparent text-sm sm:text-base outline-none placeholder:text-slate-600 text-white min-w-0"
                 aria-label="YouTube URL"
                 autoComplete="off"
                 onPaste={e => {

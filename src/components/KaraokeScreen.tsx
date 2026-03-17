@@ -133,15 +133,15 @@ export default function KaraokeScreen({ videoId, onBack }: Props) {
   return (
     <div
       ref={containerRef}
-      className="relative min-h-screen flex flex-col overflow-hidden"
-      style={{ background: 'var(--bg-primary)' }}
+      className="relative flex flex-col overflow-hidden"
+      style={{ background: 'var(--bg-primary)', height: '100dvh' }}
       onMouseMove={showControls}
       onTouchStart={showControls}
     >
       {meta?.thumbnailUrl && (
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img src={meta.thumbnailUrl} alt="" aria-hidden="true"
-            className="w-full h-full object-cover scale-110 blur-3xl opacity-10" />
+            className="w-full h-full object-cover scale-110 blur-2xl opacity-[0.07]" />
           <div className="absolute inset-0"
             style={{ background: 'linear-gradient(180deg, rgba(10,10,15,0.7) 0%, rgba(10,10,15,0.95) 100%)' }} />
         </div>
@@ -281,7 +281,7 @@ export default function KaraokeScreen({ videoId, onBack }: Props) {
           ) : (
             <div ref={scrollContainerRef}
               className="absolute inset-0 overflow-y-auto overscroll-contain"
-              style={{ scrollbarWidth: 'none' }}>
+              style={{ scrollbarWidth: 'none', touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}>
               <div className="flex flex-col items-center" style={{ paddingTop: '45vh', paddingBottom: '45vh' }}>
                 {lines.map((line, i) => (
                   <LyricsLine
@@ -315,7 +315,8 @@ export default function KaraokeScreen({ videoId, onBack }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.25 }}
-            className="relative z-20 px-4 pb-6 pt-2 player-bg"
+            className="relative z-20 px-4 pt-2 player-bg"
+            style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))' }}
             role="region" aria-label="Playback controls"
           >
             <PlayerControls

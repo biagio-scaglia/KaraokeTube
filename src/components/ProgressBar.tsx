@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { useCallback, useRef } from 'react';
 
 interface Props {
@@ -15,16 +14,45 @@ function formatTime(s: number): string {
 
 export default function ProgressBar({ currentTime, duration, onSeek }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
   const progress = duration > 0 ? Math.min(currentTime / duration, 1) : 0;
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+  const seekFromClientX = useCallback(
+    (clientX: number) => {
       if (!trackRef.current || duration === 0) return;
       const rect = trackRef.current.getBoundingClientRect();
-      const ratio = (e.clientX - rect.left) / rect.width;
-      onSeek(Math.max(0, Math.min(ratio * duration, duration)));
+      const ratio = Math.max(0, Math.min((clientX - rect.left) / rect.width, 1));
+      onSeek(ratio * duration);
     },
     [duration, onSeek]
+  );
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      isDragging.current = true;
+      seekFromClientX(e.clientX);
+      const onMove = (ev: MouseEvent) => { if (isDragging.current) seekFromClientX(ev.clientX); };
+      const onUp = () => { isDragging.current = false; window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
+    },
+    [seekFromClientX]
+  );
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      seekFromClientX(e.touches[0].clientX);
+    },
+    [seekFromClientX]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      seekFromClientX(e.touches[0].clientX);
+    },
+    [seekFromClientX]
   );
 
   const handleKeyDown = useCallback(
@@ -42,46 +70,40 @@ export default function ProgressBar({ currentTime, duration, onSeek }: Props) {
         role="slider"
         aria-valuemin={0}
         aria-valuemax={duration}
-        aria-valuenow={currentTime}
+        aria-valuenow={Math.floor(currentTime)}
         aria-label="Seek"
         tabIndex={0}
-        className="relative h-1.5 rounded-full cursor-pointer group"
-        style={{ background: 'rgba(255,255,255,0.12)' }}
-        onClick={handleClick}
+        className="relative cursor-pointer group"
+        style={{ height: 20, display: 'flex', alignItems: 'center', touchAction: 'none' }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onKeyDown={handleKeyDown}
       >
-        {}
-        <motion.div
-          className="absolute left-0 top-0 h-full rounded-full"
-          style={{
-            background: 'linear-gradient(90deg, #a855f7, #ec4899)',
-            width: `${progress * 100}%`,
-          }}
-          transition={{ duration: 0.1, ease: 'linear' }}
-        />
-        {}
-        <motion.div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white opacity-0 group-hover:opacity-100 transition-opacity"
-          style={{ left: `calc(${progress * 100}% - 6px)` }}
-          whileHover={{ scale: 1.3 }}
-        />
-        {}
         <div
-          className="absolute inset-0 rounded-full overflow-hidden"
-          aria-hidden="true"
+          className="absolute inset-x-0 rounded-full"
+          style={{ height: 4, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.12)' }}
         >
           <div
-            className="h-full rounded-full"
+            className="absolute left-0 top-0 h-full rounded-full"
             style={{
               width: `${progress * 100}%`,
-              background: 'rgba(168,85,247,0.15)',
+              background: 'linear-gradient(90deg, #a855f7, #ec4899)',
+            }}
+          />
+          <div
+            className="absolute top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white"
+            style={{
+              left: `calc(${progress * 100}% - 7px)`,
+              opacity: 1,
+              boxShadow: '0 0 6px rgba(168,85,247,0.6)',
+              transition: 'transform 0.1s ease',
             }}
           />
         </div>
       </div>
 
-      {}
-      <div className="flex justify-between text-xs tabular-nums select-none"
+      <div className="flex justify-between text-xs tabular-nums select-none px-0.5"
         style={{ color: 'var(--text-muted)' }}>
         <span>{formatTime(currentTime)}</span>
         <span>{formatTime(duration)}</span>

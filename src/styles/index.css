@@ -21,6 +21,12 @@
     scroll-behavior: smooth;
   }
 
+  html, body {
+    height: 100%;
+    margin: 0;
+    overscroll-behavior: none;
+  }
+
   body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
@@ -49,10 +55,17 @@
 
 @layer utilities {
   .glass {
-    background: rgba(26, 26, 36, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(26, 26, 36, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--border);
+  }
+
+  @media (max-width: 640px) {
+    .glass {
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
   }
 
   .glow-purple {
